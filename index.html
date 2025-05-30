@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>반지웍스 룰렛 이벤트</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      text-align: center;
+      margin: 0;
+    }
+    #wheelContainer {
+      position: relative;
+      width: 90vw;
+      max-width: 500px;
+      height: 90vw;
+      max-height: 500px;
+      margin: 30px auto;
+    }
+    #pointer {
+      position: absolute;
+      top: -15px;
+      left: 50%;
+      transform: translateX(-50%) rotate(180deg);
+      width: 0;
+      height: 0;
+      border-left: 15px solid transparent;
+      border-right: 15px solid transparent;
+      border-bottom: 30px solid red;
+      z-index: 10;
+    }
+    #wheelCanvas {
+      border-radius: 50%;
+      border: 4px solid #333;
+      width: 100%;
+      height: 100%;
+    }
+    #controlBtn {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 10px 20px;
+      font-size: 18px;
+      z-index: 20;
+      cursor: pointer;
+    }
+    table {
+      width: 90%;
+      margin: 20px auto;
+      border-collapse: collapse;
+      background: #fff;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 6px 12px;
+      font-size: 14px;
+    }
+    input[type="text"] {
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <h1>✶ 반지웍스 룰렛 이벤트 ✶</h1>
+  <div id="wheelContainer">
+    <div id="pointer"></div>
+    <canvas id="wheelCanvas" width="500" height="500"></canvas>
+    <button id="controlBtn">Start</button>
+  </div>
+
+  <table id="prizeTable">
+    <tr><th>순위</th><th>보상</th><th>확률 (%)</th></tr>
+    <tr><td>1등</td><td><input type="text" value="1캐럿 다이아💎"></td><td class="prob">0.1</td></tr>
+    <tr><td>2등</td><td><input type="text" value="5만원 할인"></td><td class="prob">1</td></tr>
+    <tr><td>3등</td><td><input type="text" value="3만원 할인"></td><td class="prob">8</td></tr>
+    <tr><td>4등</td><td><input type="text" value="2만원 할인"></td><td class="prob">15</td></tr>
+    <tr><td>5등</td><td><input type="text" value="1만원 할인"></td><td class="prob">30</td></tr>
+    <tr><td>6등</td><td><input type="text" value="5천원 할인"></td><td class="prob">45.9</td></tr>
+  </table>
+
+  <button id="addRowBtn">등수 추가</button>
+  <button id="adjustProbBtn">확률 재조정</button>
+
+  <script src="renderer.js"></script>
+</body>
+</html>
