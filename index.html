@@ -15,8 +15,10 @@
     #wheelContainer {
       position: relative;
       width: 90vw;
+      max-width: 500px;
       height: 90vw;
-      margin: 30px auto;
+      max-height: 500px;
+      margin: 20px auto;
     }
     #pointer {
       position: absolute;
@@ -41,8 +43,8 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      padding: 12px 24px;
-      font-size: 20px;
+      padding: 10px 20px;
+      font-size: 18px;
       z-index: 20;
       cursor: pointer;
     }
@@ -50,17 +52,15 @@
       margin: 20px auto;
       border-collapse: collapse;
       background: #fff;
-      width: 90%;
     }
     th, td {
       border: 1px solid #ccc;
-      padding: 6px 8px;
-      font-size: 14px;
+      padding: 6px 12px;
     }
   </style>
 </head>
 <body>
-  <h2>✶ 반지웍스 룰렛 이벤트 ✶</h2>
+  <h1>✶ 반지웍스 룰렛 이벤트 ✶</h1>
 
   <div id="wheelContainer">
     <div id="pointer"></div>
@@ -68,16 +68,21 @@
     <button id="controlBtn">Start</button>
   </div>
 
-  <table>
+  <table id="prizeTable">
     <tr><th>순위</th><th>보상</th><th>확률 (%)</th></tr>
-    <tr><td>1등</td><td>1캐럿 다이아💎 증정</td><td>0.1</td></tr>
-    <tr><td>2등</td><td>다이아💎 세팅 변경</td><td>1</td></tr>
-    <tr><td>3등</td><td>5천원 할인</td><td>8</td></tr>
-    <tr><td>4등</td><td>재방문 1만원 할인권</td><td>15</td></tr>
-    <tr><td>5등</td><td>3천원 할인</td><td>30</td></tr>
-    <tr><td>6등</td><td>1천원 할인</td><td>45.9</td></tr>
+    <tr><td>1등</td><td>1캐럿 다이아💎 증정</td><td class="prob">0.1</td></tr>
+    <tr><td>2등</td><td>다이아💎 세팅 변경</td><td class="prob">1</td></tr>
+    <tr><td>3등</td><td>5천원 할인</td><td class="prob">8</td></tr>
+    <tr><td>4등</td><td>재방문 1만원 할인권</td><td class="prob">15</td></tr>
+    <tr><td>5등</td><td>3천원 할인</td><td class="prob">30</td></tr>
+    <tr><td>6등</td><td>1천원 할인</td><td class="prob">45.9</td></tr>
   </table>
 
-  <script src="mobile-renderer.js"></script>
+  <audio id="tick" src="sounds/tick.mp3"></audio>
+  <audio id="click" src="sounds/click.mp3"></audio>
+  <audio id="win" src="sounds/win.mp3"></audio>
+  <audio id="firstWin" src="sounds/1st.mp3"></audio>
+
+  <script src="renderer.js"></script>
 </body>
 </html>
