@@ -2,54 +2,23 @@ const canvas = document.getElementById('wheelCanvas');
 const ctx = canvas.getContext('2d');
 const controlBtn = document.getElementById('controlBtn');
 
+const prizes = [
+  { label: "1캐럿 다이아💎 증정", probability: 0.001 },
+  { label: "다이아💎 세팅 변경", probability: 0.01 },
+  { label: "5천원 할인", probability: 0.08 },
+  { label: "재방문 1만원 할인권", probability: 0.15 },
+  { label: "3천원 할인", probability: 0.30 },
+  { label: "1천원 할인", probability: 0.459 }
+];
+
 let spinning = false;
 let stopping = false;
 let currentAngle = 0;
 let angularVelocity = 0;
 let targetAngle = 0;
 let chosenPrizeIndex = 0;
-let lastTickIndex = -1;
-
-function getPrizes() {
-  const rows = document.querySelectorAll('#prizeTable tr');
-  return Array.from(rows).slice(1).map((row, i) => {
-    const prizeInput = row.querySelector('input');
-    const probCell = row.querySelector('.prob');
-    return {
-      label: prizeInput ? prizeInput.value : `Prize ${i + 1}`,
-      probability: parseFloat(probCell ? probCell.textContent : "0") / 100,
-    };
-  });
-}
-
-function calculateProbabilities() {
-  const prizes = getPrizes();
-  const count = prizes.length;
-  const probCells = document.querySelectorAll('.prob');
-
-  const fixedProb = 0.001;
-  const remaining = 1.0 - fixedProb;
-
-  const steps = count - 1;
-  const weights = [];
-  let totalWeight = 0;
-
-  for (let i = 1; i <= steps; i++) {
-    const w = Math.pow(2, i);
-    weights.push(w);
-    totalWeight += w;
-  }
-
-  if (probCells[0]) probCells[0].textContent = (fixedProb * 100).toFixed(1);
-
-  for (let i = 1; i < count; i++) {
-    const adjusted = (weights[steps - i] / totalWeight) * remaining;
-    if (probCells[i]) probCells[i].textContent = (adjusted * 100).toFixed(1);
-  }
-}
 
 function getCumulativeProbabilities() {
-  const prizes = getPrizes();
   const thresholds = [];
   let sum = 0;
   for (let prize of prizes) {
@@ -60,7 +29,6 @@ function getCumulativeProbabilities() {
 }
 
 function drawWheel() {
-  const prizes = getPrizes();
   const segmentAngle = (2 * Math.PI) / prizes.length;
   const radius = canvas.width / 2;
 
@@ -69,7 +37,7 @@ function drawWheel() {
   ctx.translate(radius, radius);
   ctx.rotate(currentAngle);
 
-  const colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A2', '#A233FF', '#33FFF3', '#FFD700', '#00CED1'];
+  const colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A2', '#A233FF', '#33FFF3'];
 
   prizes.forEach((prize, i) => {
     const startAngle = i * segmentAngle;
@@ -88,7 +56,7 @@ function drawWheel() {
     ctx.rotate(startAngle + segmentAngle / 2);
     ctx.fillStyle = "#000";
     ctx.textAlign = "center";
-    ctx.font = "16px Arial";
+    ctx.font = "bold 14px sans-serif";
     ctx.fillText(prize.label, radius * 0.65, 0);
     ctx.restore();
   });
@@ -101,11 +69,9 @@ function resetState() {
   stopping = false;
   angularVelocity = 0;
   controlBtn.textContent = "Start";
-  lastTickIndex = -1;
 }
 
 function animate() {
-  const prizes = getPrizes();
   const segmentAngle = (2 * Math.PI) / prizes.length;
 
   if (spinning) {
@@ -116,12 +82,10 @@ function animate() {
         spinning = false;
         stopping = false;
         drawWheel();
-
-        const resultText = prizes[chosenPrizeIndex].label;
         setTimeout(() => {
-          alert(`당첨: ${resultText}`);
+          alert(`🎉 당첨: ${prizes[chosenPrizeIndex].label}`);
           resetState();
-        }, 100);
+        }, 200);
       } else {
         angularVelocity = Math.max(remaining * 0.06, 0.002);
         currentAngle += angularVelocity;
@@ -139,14 +103,13 @@ controlBtn.addEventListener('click', () => {
   if (!spinning) {
     spinning = true;
     stopping = false;
-    angularVelocity = 0.35;
+    angularVelocity = 0.3;
     controlBtn.textContent = "Stop";
   } else if (!stopping) {
     const thresholds = getCumulativeProbabilities();
     const r = Math.random();
     chosenPrizeIndex = thresholds.findIndex(p => r < p);
 
-    const prizes = getPrizes();
     const segmentAngle = (2 * Math.PI) / prizes.length;
     const prizeCenter = chosenPrizeIndex * segmentAngle + segmentAngle / 2;
     const currentMod = currentAngle % (2 * Math.PI);
@@ -156,19 +119,6 @@ controlBtn.addEventListener('click', () => {
     targetAngle = currentAngle - currentMod + delta + extraRotations * 2 * Math.PI;
     stopping = true;
   }
-});
-
-document.getElementById("addRowBtn").addEventListener("click", () => {
-  const table = document.getElementById("prizeTable");
-  const rowCount = table.rows.length;
-  if (rowCount >= 9) return;
-
-  const newRow = table.insertRow();
-  newRow.innerHTML = `<td>${rowCount}등</td><td><input type="text" value="${rowCount}등 보상"></td><td class="prob">0</td>`;
-});
-
-document.getElementById("adjustProbBtn").addEventListener("click", () => {
-  calculateProbabilities();
 });
 
 document.addEventListener("DOMContentLoaded", () => {
